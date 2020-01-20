@@ -175,7 +175,7 @@ export default class NavigationBar extends React.Component {
                                 </div>
 
                                 <div className="about-dialogue">
-                                    <p>Project repository can be found <a href='https://github.com/jkelaty/Tree-Visualizer' target='_blank' rel="noopener noreferrer">here</a>
+                                    <p>Project repository can be found <a href='https://github.com/jkelaty/tree-visualizer' target='_blank' rel="noopener noreferrer">here</a>
                                     </p>
                                     <p>Created by Jonathan Kelaty</p>
                                 </div>
