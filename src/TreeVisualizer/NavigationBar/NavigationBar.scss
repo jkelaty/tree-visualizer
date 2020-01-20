@@ -1,0 +1,453 @@
+@import '../Additional/CrossBrowser';
+
+div#navbar-wrapper {
+    width: 100%;
+    height: 65px;
+    background: #c1e3ff;
+    margin-bottom: 1em;
+
+    * {
+        user-select: none;
+    }
+
+    div.navbar-logo {
+        height: 100%;
+        float: left;
+        margin-left: 10em;
+        width: 160px;
+        position: relative;
+
+        &>a {
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            color: white;
+            z-index: 100;
+            text-shadow: black 2px 2px 0px;
+            font-weight:bold;
+            white-space:pre;
+            font-family: monospace;
+            @include transform(translateX(-50%));
+            @include transition(.3s ease font-size);
+        }
+
+        .ascii-logo {
+            position: absolute;
+            left: 50%;
+            transform-origin: top left;
+            @include transform(scale(.18) translateX(-50%));
+
+            &>span {
+                display:block;
+                line-height:8px;
+                font-size: 8px;
+                font-weight:bold;
+                white-space:pre;
+                font-family: monospace;
+                color: black;
+                @include transition(.3s ease color);
+            }
+        }
+
+        &:hover {
+            .ascii-logo>span {
+                color: green;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+        }
+    }
+
+    #operations-dropdown {
+        @include animation(slideIn1 0.5s ease-out);
+    }
+
+    #generate-tree {
+        @include animation(slideIn2 0.75s ease-out);
+    }
+
+    #reset-tree {
+        @include animation(slideIn3 1s ease-out);
+    }
+
+    #tooltips-toggle {
+        @include animation(slideIn4 1.25s ease-out);
+    }
+
+    div.dropdown {
+        height: 100%;
+        float: left;
+        margin: 0 15px;
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+
+        * {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        &:hover {
+            &>a.dropdown-toggle {
+                text-decoration: underline;
+
+                &>i {
+                    opacity: 1;
+                    @include transform(rotate(180deg));
+                }
+            }
+
+            &>ul.dropdown-menu {
+                display: block;
+                opacity: 1;
+                @include animation(fadeDropDown 0.5s ease-out);
+            }
+        }
+    }
+
+    a.dropdown-toggle {
+        cursor: pointer;
+        color: inherit;
+        text-decoration: none;
+        margin: 0 15px;
+        padding: 15px 0;
+        @include transition(.2s ease all);
+    }
+
+    a.dropdown-toggle>i, a.submenu-toggle>i {
+        margin-left: 10px;
+        opacity: .3;
+        @include transition(.3s ease all);
+    }
+
+    .fa-caret-down {
+        font-family: "FontAwesome" !important;
+
+        &:before {
+            font-size: 26px;
+            vertical-align: sub;
+        }
+    }
+
+    ul.dropdown-menu {
+        position: absolute;
+        list-style: none;
+        background-color: #EEE;
+        padding: 5px;
+        border-radius: 8px;
+        top: 40px;
+        left: 5px;
+        min-width: 200px;
+        opacity: 0;
+        @include transition(.2s ease all);
+        z-index: 10;
+        display: none;
+
+        &.submenu-dropdown {
+            top: 0;
+            left: 110%;
+        }
+    }
+
+    a.submenu-toggle>i {
+        float: right;
+        line-height: 100%;
+        @include transform(rotate(270deg));
+    }
+
+    li.submenu:hover {
+        &>a.submenu-toggle>i {
+            opacity: 1;
+            @include transform(rotate(90deg));
+        }
+
+        &:after {
+            content: "";
+            display: table;
+            position: absolute;
+            right: -10%;
+            height: 100%;
+            width: 10%;
+            top: 0;
+        }
+
+        &>ul.dropdown-menu {
+            display: block;
+            opacity: 1;
+            @include animation(fadeDropDown 0.5s ease-out);
+        }
+    }
+
+    .dropdown-menu-option {
+        border-radius: 5px;
+        padding: 7px;
+        text-align: left;
+        position: relative;
+        @include transition(.1s ease all);
+
+        &>a {
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            display: block;
+        }
+
+        &:hover {
+            background: white;
+        }
+    }
+
+    div.navbar-button, #tooltips-toggle, #about-information {
+        float: left;
+        height: 100%;
+        margin: 0 15px;
+        display: flex;
+        align-items: center;
+        font-family: monospace;
+    }
+
+    #about-information {
+        width: 50px;
+        position: relative;
+        margin: 0 65px;
+
+        .info-icon-wrapper {
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            margin: auto;
+            border-radius: 100%;
+            border: 3px solid black;
+            position: relative;
+            cursor: pointer;
+            @include transition(all ease 0.3s);
+
+            .fa-info {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                @include transform(translate(-50%,-50%));
+            }
+        }
+
+        .about-dialogue {
+            display: none;
+            position: absolute;
+            width: 200px;
+            height: 300px;
+            background-color: #EEE;
+            border: 1px solid black;
+            border-radius: 10px;
+            top: 105%;
+            left: 50%;
+            z-index: 1000000;
+            @include transform(translateX(-50%));
+
+            &:before {
+                content: '';
+                background-color: #EEE;
+                position: absolute;
+                border-width: 1px 0 0 1px;
+                border-color: black;
+                border-style: solid;
+                border-radius: 1px;
+                top: -11px;
+                height: 20px;
+                width: 20px;
+                left: 50%;
+                @include transform(translateX(-50%) rotate(45deg));
+            }
+        }
+
+        &:hover {
+            .info-icon-wrapper {
+                @include transform(scale(0.9));
+            }
+
+            .about-dialogue {
+                display: block;
+                @include animation(fadeDropDown 0.5s ease-out);
+            }
+        }
+    }
+
+    div.navbar-button>button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 20px;
+        font-family: monospace;
+        cursor: pointer;
+        width: 100px;
+        @include transition(.3s ease box-shadow);
+
+        &:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .tooltips-text {
+        margin: 10px;
+        cursor: default;
+    }
+
+    /* Toggle switch - taken from W3 Schools */
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+
+        .input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        @include transition(.4s);
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            @include transition(.4s);
+        }
+
+        &.round {
+            border-radius: 34px;
+
+            &:before {
+                border-radius: 50%;
+            }
+        }
+    }
+
+    input {
+        &:checked + .slider {
+            background-color: #12d006;
+        }
+
+        &:focus + .slider {
+            box-shadow: 0 0 1px #12d006;
+        }
+
+        &:checked + .slider:before {
+            @include transform(translateX(26px));
+        }
+    }
+}
+
+/* Submenu dropdown */
+
+@include keyframes('fadeDropDown') {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    1% {
+        display: block;
+        opacity: 0;
+    }
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+/* Header functions entrance */
+
+@include keyframes('slideIn1') {
+    0% {
+        @include transform(translateX(-50px));
+        display: none;
+        opacity: 0;
+    }
+    1% {
+        @include transform(translateX(-50px));
+        display: block;
+        opacity: 0;
+    }
+    100% {
+        @include transform(translateX(0px));
+        display: block;
+        opacity: 1;
+    }
+}
+
+@include keyframes('slideIn2') {
+    0% {
+        @include transform(translateX(-50px));
+        display: none;
+        opacity: 0;
+    }
+    33% {
+        @include transform(translateX(-50px));
+        display: block;
+        opacity: 0;
+    }
+    100% {
+        @include transform(translateX(0px));
+        display: block;
+        opacity: 1;
+    }
+}
+
+@include keyframes('slideIn3') {
+    0% {
+        @include transform(translateX(-50px));
+        display: none;
+        opacity: 0;
+    }
+    50% {
+        @include transform(translateX(-50px));
+        display: block;
+        opacity: 0;
+    }
+    100% {
+        @include transform(translateX(0px));
+        display: block;
+        opacity: 1;
+    }
+}
+
+@include keyframes('slideIn4') {
+    0% {
+        @include transform(translateX(-50px));
+        display: none;
+        opacity: 0;
+    }
+    60% {
+        @include transform(translateX(-50px));
+        display: block;
+        opacity: 0;
+    }
+    100% {
+        @include transform(translateX(0px));
+        display: block;
+        opacity: 1;
+    }
+}

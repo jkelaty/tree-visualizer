@@ -1,0 +1,53 @@
+@import '../CrossBrowser';
+
+#error-message {
+    position: absolute;
+    top: 20px;
+    height: 30px;
+    background: #f2dede;
+    width: 350px;
+    border-radius: 5px;
+    left: 50%;
+    font-family: monospace;
+    color: #a94442;
+    border: 1px solid #dec2c7;
+    opacity: 0;
+    z-index: 100000;
+    visibility: hidden;
+    @include transform(translateX(-50%));
+    @include animation(errorMessage 4s ease);
+
+    &>p {
+        position: absolute;
+        margin: unset;
+        top: 50%;
+        left: 50%;
+        @include transform(translate(-50%, -50%));
+    }
+}
+
+@include keyframes('errorMessage') {
+    0% {
+        opacity: 0;
+        visibility: visible;
+        @include transform(translateX(-50%) translateY(-20px));
+    }
+    15% {
+        opacity: 1;
+        visibility: visible;
+        @include transform(translateX(-50%));
+    }
+    84% {
+        opacity: 1;
+        visibility: visible;
+        @include transform(translateX(-50%));
+    }
+    99% {
+        opacity: 0;
+        @include transform(translateX(-50%) translateY(-20px));
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
