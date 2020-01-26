@@ -16,14 +16,6 @@
         flex-shrink: 0;
         @include transform(scale(1));
         @include transition(2s ease width);
-
-        &.moved {
-            @include transition(none);
-
-            .node-wrapper, .node-circle.initial, .node-value-text, .line.initial {
-                @include transition(none);
-            }
-        }
     }
 
     .node-value {
@@ -192,9 +184,14 @@
 
             &>span.node-hover {
                 display: block;
+                visibility: hidden;
 
-                &:hover {
-                    opacity: 1;
+                &.visible {
+                    visibility: visible;
+
+                    &:hover {
+                        opacity: 1;
+                    }
                 }
             }
         }
@@ -221,6 +218,24 @@
 
         &[node-value="null"] {
             opacity: 0;
+        }
+
+        &.moved {
+            * {
+                @include transition(none !important);
+            }
+
+            .line.success {
+                @include transform(scaleX(1) scaleY(1));
+            }
+
+            .node-circle.success {
+                stroke-dashoffset: 0;
+            }
+
+            .node-circle-background.success {
+                @include transform(scale(1));
+            }
         }
     }
 

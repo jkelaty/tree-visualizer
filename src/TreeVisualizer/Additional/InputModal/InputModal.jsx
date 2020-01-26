@@ -9,6 +9,7 @@ export default class InputModal extends React.Component {
         this.value = null;
 
         this.state = {
+            active: this.props.active,
             operation: this.props.operation,
             callback: this.props.callback
         }
@@ -31,37 +32,43 @@ export default class InputModal extends React.Component {
     }
 
     render() {
-        return (
-            <>
-                <div id='prompt-container'>
+        console.log(this.state.active);
+        if ( this.state.active ) {
+            return (
+                <>
+                    <div id='prompt-container'>
 
-                    <div id='input-container'>
-                        <div id='input-message'>Please select element:</div>
+                        <div id='input-container'>
+                            <div id='input-message'>Please select element:</div>
 
-                        <input id='input-number' onChange={this.updateInputValue} type='number' step='1' />
+                            <input id='input-number' onChange={this.updateInputValue} type='number' step='1' />
 
-                        <button
-                            id='input-confirm'
-                            className='input-prompt-button'
-                            onClick={this.confirm}>
-                                
-                            { this.state.operation }    
+                            <button
+                                id='input-confirm'
+                                className='input-prompt-button'
+                                onClick={this.confirm}>
+                                    
+                                { this.state.operation }    
 
-                        </button>
+                            </button>
 
-                        <button
-                            id='input-cancel'
-                            className='input-prompt-button'
-                            onClick={this.cancel}>
-                                
-                            Cancel
-                        </button>
+                            <button
+                                id='input-cancel'
+                                className='input-prompt-button'
+                                onClick={this.cancel}>
+                                    
+                                Cancel
+                            </button>
+                        </div>
+
+                        <div id='prompt-background' onClick={this.cancel} />
+
                     </div>
-
-                    <div id='prompt-background' onClick={this.cancel} />
-
-                </div>
-            </>
-        );
+                </>
+            );
+        }
+        else {
+            return null;
+        }
     }
 }

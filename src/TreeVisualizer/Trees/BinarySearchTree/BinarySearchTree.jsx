@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 import{ Transition, CSSTransition } from 'react-transition-group'
 
-import Tooltips from '../../Tooltips/Tooltips.jsx'
+import BinarySearchTreeTooltips from './BinarySearchTreeTooltips/BinarySearchTreeTooltips.jsx'
 import InputModal from '../../Additional/InputModal/InputModal.jsx'
 import ErrorMessage from '../../Additional/ErrorMessage/ErrorMessage.jsx'
 
@@ -112,6 +112,7 @@ export default class BinarySearchTree extends React.Component {
         this.targetNode = null;
         this.timeout = 0;
         this.input = false;
+        this.tooltipsStep = this.initialStateOperation;
         this.waiting = false;
         this.errorMessage = {
             message: '',
@@ -122,7 +123,7 @@ export default class BinarySearchTree extends React.Component {
             operation: this.initialStateOperation,
             step: 0,
             tooltips: false,
-            destroy: true
+            destroy: false
         };
 
         this.receiveInput = this.receiveInput.bind(this);
@@ -146,7 +147,7 @@ export default class BinarySearchTree extends React.Component {
             }
             else if ( newProps.tooltips !== state.tooltips ) {
                 return { tooltips: newProps.tooltips };
-            } 
+            }
         }
         else if ( newProps.tooltips !== state.tooltips ) {
             return { tooltips: newProps.tooltips };
@@ -177,9 +178,7 @@ export default class BinarySearchTree extends React.Component {
 
         return (
             <>
-                { this.input ?
-                    <InputModal operation = {this.state.operation} callback = {this.receiveInput} />
-                : null }
+                <InputModal active = {this.input} operation = {this.state.operation} callback = {this.receiveInput} key = {this.input} />
 
                 <ErrorMessage message = {this.errorMessage['message']} key = {this.errorMessage['key']} />
 
@@ -192,11 +191,11 @@ export default class BinarySearchTree extends React.Component {
 
                 </div>
 
-                <Tooltips
+                <BinarySearchTreeTooltips
                     active = {this.state.tooltips}
-                    operation = {this.state.operation}
-                    step = {this.state.step}
-                    next = {this.advanceOperationStepFromTooltips} />
+                    operation = {this.tooltipsStep}
+                    next = {this.advanceOperationStepFromTooltips}
+                    timeout = {this.timeout}/>
             </>
         );
     }
@@ -233,7 +232,7 @@ export default class BinarySearchTree extends React.Component {
                     _this.waiting = true;
                     setTimeout(function() {
                         _this.waiting = false;
-                        if ( ! _this.state.tooltips || (_this.state.operation === 'Generate') || (_this.state.operation === 'Reset') ) {
+                        if ( ! _this.state.tooltips || (_this.timeout === 0) || (_this.state.operation === 'Generate') || (_this.state.operation === 'Reset') ) {
                             _this.setState({ operation: 'Initial', step: 0 });
                         }
                     }, _this.timeout);
@@ -247,7 +246,7 @@ export default class BinarySearchTree extends React.Component {
                     _this.waiting = true;
                     setTimeout(function() {
                         _this.waiting = false;
-                        if ( ! _this.state.tooltips || (_this.state.operation === 'Generate') || (_this.state.operation === 'Reset') ) {
+                        if ( ! _this.state.tooltips || (_this.timeout === 0) || (_this.state.operation === 'Generate') || (_this.state.operation === 'Reset') ) {
                             _this.setState({ step: _this.state.step + 1 });
                         }
                     }, _this.timeout);
@@ -393,10 +392,11 @@ export default class BinarySearchTree extends React.Component {
                         className={classes}
                         node-value='null'>
 
-                            <div className='node-value' />
+                        <div className='node-value' />
 
-                            {leftChild}
-                            {rightChild}
+                        {leftChild}
+                        {rightChild}
+                        
                     </div>
                 </>
             );
@@ -506,21 +506,29 @@ export default class BinarySearchTree extends React.Component {
     getNodeHover(val) {
         return (
             <>
-                <span className='node-hover'>
-                    <i className='fas fa-search' onClick={() => this.searchNode(val)} />
-                    <span className='search'>
-                        <svg className='circle' xmlns='http://www.w3.org/2000/svg'>
-                            <circle className='circle node-hover-circle' r='24' cx='25' cy='25' fill='none' />
-                        </svg>
+                <CSSTransition
+                    in={this.state.operation === this.initialStateOperation}
+                    timeout={300}
+                    classNames={this.visibleClasses}
+                    appear={true}>
+
+                    <span className='node-hover'>
+                        <i className='fas fa-search' onClick={() => this.searchNode(val)} />
+                        <span className='search'>
+                            <svg className='circle' xmlns='http://www.w3.org/2000/svg'>
+                                <circle className='circle node-hover-circle' r='24' cx='25' cy='25' fill='none' />
+                            </svg>
+                        </span>
+
+                        <i className='fas fa-trash' onClick={() => this.deleteNode(val)} />
+                        <span className='trash'>
+                            <svg className='circle' xmlns='http://www.w3.org/2000/svg'>
+                                <circle className='circle node-hover-circle' r='24' cx='25' cy='25' fill='none' />
+                            </svg>
+                        </span>
                     </span>
 
-                    <i className='fas fa-trash' onClick={() => this.deleteNode(val)} />
-                    <span className='trash'>
-                        <svg className='circle' xmlns='http://www.w3.org/2000/svg'>
-                            <circle className='circle node-hover-circle' r='24' cx='25' cy='25' fill='none' />
-                        </svg>
-                    </span>
-                </span>
+                </CSSTransition>
             </>
         );
     }
@@ -599,17 +607,22 @@ export default class BinarySearchTree extends React.Component {
         this.targetNode = null;
         this.timeout = 0;
         this.input = false;
+        this.tooltipsStep = this.initialStateOperation;
         this.waiting = false;
 
         this.setHideTraversalAnimations();
         this.setHideMoveAnimations();
 
-        if ( document.querySelector('.moved') ) {
-            document.querySelector('.moved').classList.remove('moved');
-        }
+        setTimeout(function() {
+            if ( document.querySelector('.moved') ) {
+                document.querySelector('.moved').classList.remove('moved');
+            }
+        }, 100);
     }
 
     GenerateTree() {
+        this.tooltipsStep = this.initialStateOperation;
+
         switch( this.operationSteps[ this.state.operation ][ this.state.step ] ) {
             case 'Reset':
                 if (this.root) {
@@ -624,6 +637,7 @@ export default class BinarySearchTree extends React.Component {
                 this.reset();
                 this.insertNumElements(15);
                 this.setGenerationAnimations();
+                this.timeout = 0;
                 break;
             default:
                 this.InitialTree();
@@ -632,6 +646,8 @@ export default class BinarySearchTree extends React.Component {
     }
     
     ResetTree() {
+        this.tooltipsStep = this.initialStateOperation;
+
         switch( this.operationSteps[ this.state.operation ][ this.state.step ] ) {
             case 'Hide':
                 if (this.root) {
@@ -653,6 +669,8 @@ export default class BinarySearchTree extends React.Component {
     }
     
     InsertInTree(val) {
+        this.tooltipsStep = this.initialStateOperation;
+
         switch( this.operationSteps[ this.state.operation ][ this.state.step ] ) {
             case 'Input':
                 this.input = true;
@@ -662,6 +680,7 @@ export default class BinarySearchTree extends React.Component {
                     if ( ! this.contains(this.targetValue) ) {
                         this.insert(this.targetValue);
                         this.timeout = this.setInsertAnimations();
+                        this.tooltipsStep = 'Insert';
                     }
                     else {
                         this.targetValue = null;
@@ -674,6 +693,7 @@ export default class BinarySearchTree extends React.Component {
                 if ( this.targetValue ) {
                     this.setInsertionCompleteAnimations();
                     this.timeout = 5000;
+                    this.tooltipsStep = 'Insert 2';
                 }
                 break;
             default:
@@ -683,6 +703,8 @@ export default class BinarySearchTree extends React.Component {
     }
     
     RemoveFromTree() {
+        this.tooltipsStep = this.initialStateOperation;
+
         switch( this.operationSteps[ this.state.operation ][ this.state.step ] ) {
             case 'Input':
                 if ( this.root ) {
@@ -697,37 +719,37 @@ export default class BinarySearchTree extends React.Component {
                 if ( this.targetValue ) {
                     if ( this.contains(this.targetValue) ) {
                         this.timeout = this.setRemoveAnimations() + 3000;
+                        this.tooltipsStep = 'Remove 1';
                     }
                     else {
                         this.targetValue = null;
-                        this.errorMessage['message'] = 'Error: Tree does not contain element';
+                        this.errorMessage['message'] = 'Error: Tree does not contain target element';
                         this.errorMessage['key'] = new Date().getTime(); 
                     }
                 }
                 break;
             case 'Remove 2':
                 if ( this.targetValue ) {
+                    this.tooltipsStep = 'Remove 2';
                     this.timeout = this.setMoveSubtreeAnimations() + 3000;
                 }
                 break;
             case 'Remove 3':
-                if ( this.targetValue ) {
-                    if ( this.targetNode ) {
-                        this.timeout = this.setRemoveAnimations() + 3000;
-                    }
-                    else {
-                        this.timeout = 0;
-                    }
+                if ( this.targetValue && this.targetNode ) {
+                    this.tooltipsStep = 'Remove 3';
+                    this.timeout = this.setRemoveAnimations() + 3000;
+                }
+                else {
+                    this.timeout = 0;
                 }
                 break;
             case 'Remove 4':
-                if ( this.targetValue ) {
-                    if ( this.targetNode ) {
-                        this.timeout = this.setMoveSubtreeAnimations() + 3000;
-                    }
-                    else {
-                        this.timeout = 0;
-                    }
+                if ( this.targetValue && this.targetNode ) {
+                    this.tooltipsStep = 'Remove 4';
+                    this.timeout = this.setMoveSubtreeAnimations() + 3000;
+                }
+                else {
+                    this.timeout = 0;
                 }
                 break;
             case 'Complete':
@@ -735,8 +757,8 @@ export default class BinarySearchTree extends React.Component {
                     this.root = this.remove(this.removeValue);
                     this.setHideMoveAnimations();
                     this.setHideTraversalAnimations();
-                    document.querySelector('.root').classList.add('moved');
-                    this.timeout = 2000;
+                    document.querySelector('.node-wrapper[node-value="' + this.targetValue + '"]').classList.add('moved');
+                    this.timeout = 0;
                 }
                 break;
             default:
@@ -746,6 +768,8 @@ export default class BinarySearchTree extends React.Component {
     }
     
     SearchTree() {
+        this.tooltipsStep = this.initialStateOperation;
+
         switch( this.operationSteps[ this.state.operation ][ this.state.step ] ) {
             case 'Input':
                 if ( this.root ) {
@@ -759,11 +783,12 @@ export default class BinarySearchTree extends React.Component {
             case 'Search':
                 if ( this.targetValue ) {
                     this.timeout = this.setSearchAnimations() + 7000;
+                    this.tooltipsStep = 'Search';
 
                     if ( ! this.contains(this.targetValue) ) {
                         let _this = this;
                         setTimeout(function() {
-                            _this.errorMessage['message'] = 'Tree does not contain element';
+                            _this.errorMessage['message'] = 'Tree does not contain target element';
                             _this.errorMessage['key'] = new Date().getTime();
                             _this.forceUpdate();
                         }, _this.timeout - 6000);
@@ -777,7 +802,11 @@ export default class BinarySearchTree extends React.Component {
     }
 
     TraverseTree() {
+        this.tooltipsStep = this.initialStateOperation;
+        
         if ( this.root ) {
+            this.tooltipsStep = this.state.operation;
+
             switch( this.state.operation ) {
                 case 'Pre-Order':
                 case 'In-Order':
@@ -1133,7 +1162,7 @@ export default class BinarySearchTree extends React.Component {
                             'zIndex': '1000',
                             'transform': 'translate(-50%, -50px)'
                         };
-        
+                        
                         _delay = this.setMoveSubtreeCompleteAnimations(node.right);
                     }
                     else if ( node.right === null ) {
@@ -1164,6 +1193,8 @@ export default class BinarySearchTree extends React.Component {
                             'width': document.querySelector('.root').offsetWidth / 2 + 'px'
                         };
                     }
+                    
+                    this.targetValue = node.value;
                 }
 
                 this.targetNode = null;

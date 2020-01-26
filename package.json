@@ -6,12 +6,11 @@
   "dependencies": {
     "font-awesome": "^4.7.0",
     "git": "^0.1.5",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "^3.3.0",
-    "react-transition-group": "^4.3.0",
-    "s": "^1.0.0"
+    "react-transition-group": "^4.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

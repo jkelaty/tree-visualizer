@@ -35,16 +35,18 @@ export default class TreeVisualizer extends React.Component {
     }
 
     changeTree(tree_key) {
-        let _this = this;
-        let new_key = new Date().getTime();
+        if (tree_key !== this.state.tree) {
+            let _this = this;
+            let new_key = new Date().getTime();
 
-        this.setState({ operation: 'Destroy', menu_key: tree_key, key: new_key });
+            this.setState({ operation: 'Destroy', menu_key: tree_key, key: new_key });
 
-        setTimeout(function() {
-            if ( _this.state.key === new_key ) {
-                _this.setState({ tree: tree_key });
-            }
-        }, 1500);
+            setTimeout(function() {
+                if ( _this.state.key === new_key ) {
+                    _this.setState({ tree: tree_key });
+                }
+            }, 1500);
+        }
     }
 
     Tree() {

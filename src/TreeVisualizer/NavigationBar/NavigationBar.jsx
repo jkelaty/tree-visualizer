@@ -73,8 +73,8 @@ export default class NavigationBar extends React.Component {
                 <div id='navbar-wrapper'>
 
                     <div className='navbar-logo'>
-                        <a href='/'>
-                            {getHeaderLogo()}
+                        <a href='/tree-visualizer'>
+                            { getHeaderLogo() }
                         </a>
                     </div>
                     
