@@ -32,7 +32,6 @@ export default class InputModal extends React.Component {
     }
 
     render() {
-        console.log(this.state.active);
         if ( this.state.active ) {
             return (
                 <>

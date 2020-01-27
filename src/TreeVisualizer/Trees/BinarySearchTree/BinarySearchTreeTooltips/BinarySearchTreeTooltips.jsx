@@ -35,7 +35,7 @@ export default class BinarySearchTreeTooltips extends Tooltips {
         return (
             <>
                 <div style={{background:'green',width:'100%',height:'100%'}}>
-                    {'insert'}
+                    {'Insert'}
                 </div>
             </>
         );
