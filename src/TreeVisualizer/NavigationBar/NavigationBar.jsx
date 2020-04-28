@@ -24,6 +24,10 @@ export default class NavigationBar extends React.Component {
             AVL : {
                 name : 'AVL Tree',
                 operations : [
+                    'Insert',
+                    'Remove',
+                    'Search',
+                    'Traversals'
                 ]
             },
             RBT : {

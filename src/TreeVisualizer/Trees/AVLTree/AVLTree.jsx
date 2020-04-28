@@ -1,20 +1,20 @@
 import React from 'react'
 import{ Transition, CSSTransition } from 'react-transition-group'
 
-import BinarySearchTreeTooltips from './BinarySearchTreeTooltips/BinarySearchTreeTooltips.jsx'
+import AVLTreeTooltips from './AVLTreeTooltips/AVLTreeTooltips.jsx'
 import InputModal from '../../Additional/InputModal/InputModal.jsx'
 import ErrorMessage from '../../Additional/ErrorMessage/ErrorMessage.jsx'
 
 import Queue from '../../Additional/Queue.js'
 import { randomIntFromInverval } from '../../Additional/Helpers.js'
 
-import './BinarySearchTree.scss'
+import './AVLTree.scss'
 
-class BinarySearchTreeNode {
+class AVLTreeNode {
     constructor(val) {
-        this.value = val;
-        this.left  = null;
-        this.right = null;
+        this.value  = val;
+        this.left   = null;
+        this.right  = null;
 
         this.animations = {
             initial: {
@@ -48,7 +48,7 @@ class BinarySearchTreeNode {
     }
 }
 
-export default class BinarySearchTree extends React.Component {
+export default class AVLTree extends React.Component {
     constructor(props) {
         super(props);
 
@@ -83,7 +83,8 @@ export default class BinarySearchTree extends React.Component {
                 'Remove 2',
                 'Remove 3',
                 'Remove 4',
-                'Complete'
+                'Complete',
+                'test'
             ],
             Search: [
                 'Input',
@@ -103,8 +104,8 @@ export default class BinarySearchTree extends React.Component {
             ]
         };
 
-        this.name = 'BinarySearchTree';
-        this.key  = 'BST';
+        this.name = 'AVLTree';
+        this.key  = 'AVL';
         this.root = null;
 
         this.removeValue = null;
@@ -191,7 +192,7 @@ export default class BinarySearchTree extends React.Component {
 
                 </div>
 
-                <BinarySearchTreeTooltips
+                <AVLTreeTooltips
                     active = {this.state.tooltips}
                     operation = {this.tooltipsStep}
                     next = {this.advanceOperationStepFromTooltips}
@@ -267,28 +268,10 @@ export default class BinarySearchTree extends React.Component {
     /* Basic internal tree operations */
 
     insertNumElements(elements) {
-        let counter = 0;
-
         for (let i = 0; i < elements; ++i) {
             let val = randomIntFromInverval(1, 150);
-            if ( this.insert( val ) ) {
-                if ( this.height() > 5 ) {
-                    if ( counter > 100 ) {
-                        this.reset();
-                        counter = 0;
-                        i = 0;
-                    }
-                    else {
-                        this.root = this.remove( val );
-                        --i;
-                    }
-                }
-                else {
-                    ++counter;
-                }
-            }
-            else {
-                --i;
+            if ( ! this.contains( val ) ) {
+                this.root = this.insert( val );
             }
         }
     }
@@ -299,7 +282,7 @@ export default class BinarySearchTree extends React.Component {
 
     height(node = this.root) {
         if (node === null) return 0;
-        return Math.max( this.height(node.left), this.height(node.right) ) + 1;
+        else return Math.max( this.height(node.left), this.height(node.right) ) + 1;
     }
 
     contains(val, node = this.root) {
@@ -316,34 +299,65 @@ export default class BinarySearchTree extends React.Component {
         }
     }
 
-    insert(val) {
-        if (this.root === null) {
-            this.root = new BinarySearchTreeNode(val);
-            return true;
+    insert(val, node = this.root) {
+        if (node === null) {
+            return new AVLTreeNode(val); 
         }
-        
-        let curr = this.root;
+        else if (node.value === val) {
+            //tree contains key already
+            return node;
+        }
+        else if (node.value < val) {
+            node.right = this.insert(val, node.right);
+        }
+        else {
+            node.left = this.insert(val, node.left);
+        }
 
-        while (true) {
-            if (curr.value === val) {
-                //tree contains key already
-                return false;
-            }
-            else if (curr.value < val) {
-                if(curr.right === null) {
-                    curr.right = new BinarySearchTreeNode(val);
-                    return true;
-                }
-                curr = curr.right;
-            }
-            else {
-                if(curr.left === null) {
-                    curr.left = new BinarySearchTreeNode(val);
-                    return true;
-                }
-                curr = curr.left;
-            }
+        let balanceFactor = this.getBalanceFactor(node);
+
+        if ( balanceFactor > 1 && val < node.left.value ) {
+            return this.rotateRight(node);
         }
+        else if ( balanceFactor < -1 && val > node.right.value ) {
+            return this.rotateLeft(node);
+        }
+        else if ( balanceFactor > 1 && val > node.left.value ) {
+            node.left = this.rotateLeft(node.left);
+            return this.rotateRight(node);
+        }
+        else if ( balanceFactor < -1 && val < node.right.value ) {
+            node.right = this.rotateRight(node.right);
+            return this.rotateLeft(node);
+        }
+        else {
+            return node;
+        }
+    }
+
+    getBalanceFactor(node) {
+        if (node === null) return 0;
+        else return this.height( node.left ) - this.height( node.right );
+    }
+
+    rotateRight(node) {
+        let x = node.left;
+        let y = x.right;
+
+        x.right = node;
+        node.left = y;
+
+        return x;
+    }
+
+    rotateLeft(node) {
+        let x = node.right;
+        let y = x.left;
+
+        x.left = node;
+        node.right = y;
+
+        return x;
     }
 
     remove(val, node = this.root) {
@@ -370,7 +384,27 @@ export default class BinarySearchTree extends React.Component {
             }
         }
 
-        return node;
+        if (this.root === null) return this.root;
+
+        let balanceFactor = this.getBalanceFactor(node);
+
+        if ( balanceFactor > 1 && this.getBalanceFactor(node.left) > -1 ) {
+            return this.rotateRight(node);
+        }
+        else if ( balanceFactor < -1 && this.getBalanceFactor(node.left) < 1 ) {
+            return this.rotateLeft(node);
+        }
+        else if ( balanceFactor > 1 && this.getBalanceFactor(node.left) < 0 ) {
+            node.left = this.rotateLeft(node.left);
+            return this.rotateRight(node);
+        }
+        else if ( balanceFactor < -1 && this.getBalanceFactor(node.left) > 0 ) {
+            node.right = this.rotateRight(node.right);
+            return this.rotateLeft(node);
+        }
+        else {
+            return node;
+        }
     }
 
     inOrderSuccessor(node) {
@@ -690,7 +724,7 @@ export default class BinarySearchTree extends React.Component {
             case 'Insert':
                 if ( this.targetValue ) {
                     if ( ! this.contains(this.targetValue) ) {
-                        this.insert(this.targetValue);
+                        this.root = this.insert(this.targetValue);
                         this.timeout = this.setInsertAnimations();
                         this.tooltipsStep = 'Insert';
                     }
@@ -772,6 +806,11 @@ export default class BinarySearchTree extends React.Component {
                     document.querySelector('.node-wrapper[node-value="' + this.targetValue + '"]').classList.add('moved');
                     this.timeout = 0;
                 }
+                break;
+            case 'test':
+                this.InitialTree();
+                this.timeout = 100000;
+                console.log('test');
                 break;
             default:
                 this.InitialTree();
