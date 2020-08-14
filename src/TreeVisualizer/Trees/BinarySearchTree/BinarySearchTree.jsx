@@ -178,9 +178,17 @@ export default class BinarySearchTree extends React.Component {
 
         return (
             <>
-                <InputModal active = {this.input} operation = {this.state.operation} callback = {this.receiveInput} key = {this.input} />
+                <InputModal
+                    active = {this.input}
+                    operation = {this.state.operation}
+                    callback = {this.receiveInput}
+                    key = {this.input}
+                />
 
-                <ErrorMessage message = {this.errorMessage['message']} key = {this.errorMessage['key']} />
+                <ErrorMessage
+                    message = {this.errorMessage['message']}
+                    key = {this.errorMessage['key']}
+                />
 
                 <div
                     id={ this.name }
@@ -195,7 +203,8 @@ export default class BinarySearchTree extends React.Component {
                     active = {this.state.tooltips}
                     operation = {this.tooltipsStep}
                     next = {this.advanceOperationStepFromTooltips}
-                    timeout = {this.timeout}/>
+                    timeout = {this.timeout}
+                />
             </>
         );
     }

@@ -1,9 +1,7 @@
 import React from 'react';
 
 import NavigationBar from './NavigationBar/NavigationBar.jsx'
-
 import BinarySearchTree from './Trees/BinarySearchTree/BinarySearchTree.jsx'
-import AVLTree from './Trees/AVLTree/AVLTree.jsx';
 
 import './TreeVisualizer.scss';
 
@@ -15,8 +13,8 @@ export default class TreeVisualizer extends React.Component {
         this.initialStateOperation = 'Initial';
 
         this.state = {
-            tree: 'AVL',
-            menu_key: 'AVL',
+            tree: 'BST',
+            menu_key: 'BST',
             operation: this.initialStateOperation,
             tooltips: false,
             key: null
@@ -55,8 +53,6 @@ export default class TreeVisualizer extends React.Component {
             <>
                 { this.state.tree === 'BST' ?
                     <BinarySearchTree operation = {this.state.operation} tooltips = {this.state.tooltips} />
-                : this.state.tree === 'AVL' ?
-                    <AVLTree operation = {this.state.operation} tooltips = {this.state.tooltips} />
                 : null }
             </>
         );

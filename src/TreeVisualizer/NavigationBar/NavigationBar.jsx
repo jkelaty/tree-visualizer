@@ -21,35 +21,31 @@ export default class NavigationBar extends React.Component {
                     'Traversals'
                 ]
             },
-            AVL : {
-                name : 'AVL Tree',
-                operations : [
-                    'Insert',
-                    'Remove',
-                    'Search',
-                    'Traversals'
-                ]
-            },
-            RBT : {
-                name : 'Red-Black Tree',
-                operations : [
-                ]
-            },
-            BHP : {
-                name : 'Binary Heap',
-                operations : [
-                ]
-            },
-            BTR: {
-                name : 'B-Tree',
-                operations : [
-                ]
-            },
-            TRI : {
-                name : 'Trie',
-                operations : [
-                ]
-            }
+            // AVL : {
+            //     name : 'AVL Tree',
+            //     operations : [
+            //         'Insert',
+            //         'Remove',
+            //         'Search',
+            //         'Traversals'
+            //     ]
+            // },
+            // RBT : {
+            //     name : 'Red-Black Tree',
+            //     operations : [
+            //         'Insert',
+            //         'Remove',
+            //         'Search',
+            //         'Traversals'
+            //     ]
+            // },
+            // BHP : {
+            //     name : 'Binary Heap',
+            //     operations : [
+            //         'Pop',
+            //         'Push'
+            //     ]
+            // }
         };
 
         this.traversals = [

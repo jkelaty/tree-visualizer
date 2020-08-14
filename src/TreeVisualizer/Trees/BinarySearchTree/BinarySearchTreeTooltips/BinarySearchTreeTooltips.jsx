@@ -1,6 +1,5 @@
 import React from 'react'
 import Tooltips from '../../../Tooltips/Tooltips.jsx'
-//import{ CSSTransition } from 'react-transition-group'
 
 export default class BinarySearchTreeTooltips extends Tooltips {
     getContent(operation) {
