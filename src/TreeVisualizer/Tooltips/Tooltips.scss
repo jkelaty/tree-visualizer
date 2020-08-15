@@ -4,7 +4,7 @@
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 250px;
+    height: 350px;
     width: 100%;
     overflow: hidden;
     background: lightgrey;
@@ -12,7 +12,7 @@
     @include transition(0.5s ease-out max-height);
 
     &.visible {
-        max-height: 250px;
+        max-height: 350px;
     }
 
     .prev-tooltips, .curr-tooltips {
@@ -40,6 +40,20 @@
 
         &.visible {
             @include transform(translateX(0));
+        }
+    }
+
+    .tooltip {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            margin: 0 30%;
+            font-size: 20px;
+            font-family: monospace;
         }
     }
 
