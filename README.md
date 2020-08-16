@@ -1,3 +1,22 @@
+<img align="right" src="img/logo.png" alt="tree-visualizer-logo" width="150">
+
+# Tree Visualizer
+
+https://jkelaty.github.io/tree-visualizer/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
