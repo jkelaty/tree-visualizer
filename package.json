@@ -6,7 +6,7 @@
   "dependencies": {
     "font-awesome": "^4.7.0",
     "git": "^0.1.5",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "^3.3.0",
